@@ -19,14 +19,14 @@ public class SoundSystem : MonoBehaviour
 
     public void OnPlayerMakesSound(Transform player)
     {
-        Debug.Log("Sound detected! Broadcasting to monsters.");
+        Debug.Log("Sound detected! Broadcasting to enemies.");
 
-        // find all monsters in the scene and notify them
-        MonsterAI[] monsters = FindObjectsOfType<MonsterAI>();
+        // find all enemies in the scene and notify them
+        EnemyAI[] enemies = FindObjectsOfType<EnemyAI>();
 
-        foreach (MonsterAI monster in monsters)
+        foreach (EnemyAI enemy in enemies)
         {
-            monster.startInvestigating(player);
+            enemy.startInvestigating(player);
         }
     }
 }
