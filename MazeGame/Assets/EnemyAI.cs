@@ -19,7 +19,6 @@ public class EnemyAI : MonoBehaviour
     public float wanderInterval = 5f;               // time interval between picking new random destinations
 
     private NavMeshAgent agent;                      // reference to the Enemy pathfinding agent
-    private int curWaypointsIdx = 0;                // current position in the waypoints list
     private float investigationStartTime;           // when the last investigation started
     private float wanderTimer;                      // timer for the current wandering behavior
     private State curState;
