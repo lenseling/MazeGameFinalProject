@@ -8,6 +8,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MazeScene.unity
     guid: 3ad4e0e5c5032ff4c8b1dd16ee541118
+  - enabled: 1
+    path: Assets/Scenes/EscapedScene.unity
+    guid: d0b047ae41f10d54f98f89621a07d947
+  - enabled: 1
+    path: Assets/Scenes/DeathScene.unity
+    guid: 6244db7d512b00b43a942bbe309b1010
+  - enabled: 1
+    path: Assets/Scenes/MazeGeneratorScene.unity
+    guid: 7d6d565c27f604b439d0dc9cade39098
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 9a9ba8f298b04594b874a64b9aee8c2f, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: b29af3cb9126a0f4fb2450d0aaa4c3f1, type: 2}
