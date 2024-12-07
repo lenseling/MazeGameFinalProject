@@ -35,13 +35,20 @@ public class MazeSpawner : MonoBehaviour {
 	public EnemySpawner enemySpawner = null;
 
     public GameObject KeyPrefab = null;
-    public int NumberOfKeys = 5;
+    public int NumberOfKeys;
     private List<Vector3> keySpawnPositions = new List<Vector3>();
 
 
     private BasicMazeGenerator mMazeGenerator = null;
 
-	void Start() {
+    public GameObject ExitPortalPrefab = null; // The exit portal prefab
+    private GameObject exitPortalInstance = null; // Instance of the exit portal
+    private Vector3 exitPortalPosition; // The spawn position for the exit portal
+    private int keysCollected = 0; // Tracks the number of collected keys
+
+
+
+    void Start() {
 
 
 		if (!FullRandom) {
@@ -124,6 +131,18 @@ public class MazeSpawner : MonoBehaviour {
             }
         }
 
+        if (ExitPortalPrefab != null)
+        {
+            // Choose a random position for the portal from the key spawn positions
+            int randomIndex = Random.Range(0, keySpawnPositions.Count);
+            exitPortalPosition = keySpawnPositions[randomIndex];
+
+            // Instantiate the exit portal but keep it inactive initially
+            exitPortalInstance = Instantiate(ExitPortalPrefab, exitPortalPosition, Quaternion.identity, transform);
+            exitPortalInstance.SetActive(false);
+        }
+
+
         if (Pillar != null){
 			for (int row = 0; row < Rows+1; row++) {
 				for (int column = 0; column < Columns+1; column++) {
@@ -151,4 +170,16 @@ public class MazeSpawner : MonoBehaviour {
         }
 		Debug.Log("Enemy Initialization Finished");
     }
+
+    public void OnKeyCollected()
+    {
+        keysCollected++;
+        if (keysCollected >= NumberOfKeys && exitPortalInstance != null)
+        {
+            // Activate the exit portal when all keys are collected
+            exitPortalInstance.SetActive(true);
+            Debug.Log("Exit Portal Activated!");
+        }
+    }
+
 }

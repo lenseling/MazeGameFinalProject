@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ContinuousMovement : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class ContinuousMovement : MonoBehaviour
 
     private Rigidbody mRigidBody = null;
     private AudioSource mAudioSource = null;
+
 
     void Start()
     {
@@ -40,7 +42,22 @@ public class ContinuousMovement : MonoBehaviour
                 mAudioSource.PlayOneShot(KeySound);
             }
             Destroy(other.gameObject);
+            MazeSpawner mazeSpawner = FindObjectOfType<MazeSpawner>();
+            if (mazeSpawner != null)
+            {
+                mazeSpawner.OnKeyCollected();
+            }
         }
+        if (other.gameObject.tag.Equals("Portal"))
+        {
+            if (mAudioSource != null && KeySound != null)
+            {
+                mAudioSource.PlayOneShot(KeySound);
+            }
+            SceneManager.LoadScene("EscapedScene");
+
+        }
+
     }
 
     void FixedUpdate()

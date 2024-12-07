@@ -5687,7 +5687,8 @@ MonoBehaviour:
   navMeshSurface: {fileID: 1231125588}
   enemySpawner: {fileID: 1564381834}
   KeyPrefab: {fileID: 374289202576707483, guid: 78df1db2fbc8ec64f949fac0c05bf693, type: 3}
-  NumberOfKeys: 5
+  NumberOfKeys: 2
+  ExitPortalPrefab: {fileID: 3992058561654064293, guid: 13c990b8270c70b4c9f196019286028c, type: 3}
 --- !u!1 &956113816
 GameObject:
   m_ObjectHideFlags: 0
