@@ -4,6 +4,8 @@ using Oculus.Interaction.Surfaces;
 using UnityEditor;
 using Unity.AI.Navigation;
 using NavMeshSurface = Unity.AI.Navigation.NavMeshSurface;
+using System.Collections.Generic;
+
 
 //<summary>
 //Game object, that creates maze and instantiates it in scene
@@ -32,9 +34,16 @@ public class MazeSpawner : MonoBehaviour {
 	public NavMeshSurface navMeshSurface = null;
 	public EnemySpawner enemySpawner = null;
 
-	private BasicMazeGenerator mMazeGenerator = null;
+    public GameObject KeyPrefab = null;
+    public int NumberOfKeys = 5;
+    private List<Vector3> keySpawnPositions = new List<Vector3>();
 
-	void Start () {
+
+    private BasicMazeGenerator mMazeGenerator = null;
+
+	void Start() {
+
+
 		if (!FullRandom) {
 			Random.seed = RandomSeed;
 		}
@@ -60,6 +69,10 @@ public class MazeSpawner : MonoBehaviour {
 			for(int column = 0; column < Columns; column++){
 				float x = column*(CellWidth+(AddGaps?.2f:0));
 				float z = row*(CellHeight+(AddGaps?.2f:0));
+
+				Vector3 cellCenter = new Vector3(x, 1, z); // Adjust y if necessary
+				keySpawnPositions.Add(cellCenter);
+
 				MazeCell cell = mMazeGenerator.GetMazeCell(row,column);
 				GameObject tmp;
 				tmp = Instantiate(Floor,new Vector3(x,0,z), Quaternion.Euler(0,0,0)) as GameObject;
@@ -86,10 +99,32 @@ public class MazeSpawner : MonoBehaviour {
 				}
 				// set layer for Nav Mesh
                 tmp.layer = LayerMask.NameToLayer("Maze");
-                //GameObjectUtility.SetStaticEditorFlags(tmp, StaticEditorFlags.NavigationStatic);
+				//GameObjectUtility.SetStaticEditorFlags(tmp, StaticEditorFlags.NavigationStatic);
+
+				
+
+			}
+		}
+
+        if (KeyPrefab != null && NumberOfKeys > 0)
+        {
+            // Shuffle the positions
+            for (int i = keySpawnPositions.Count - 1; i > 0; i--)
+            {
+                int randomIndex = Random.Range(0, i + 1);
+                Vector3 temp = keySpawnPositions[i];
+                keySpawnPositions[i] = keySpawnPositions[randomIndex];
+                keySpawnPositions[randomIndex] = temp;
+            }
+
+            // Spawn keys at random positions
+            for (int i = 0; i < Mathf.Min(NumberOfKeys, keySpawnPositions.Count); i++)
+            {
+                Instantiate(KeyPrefab, keySpawnPositions[i], Quaternion.identity, transform);
             }
         }
-		if(Pillar != null){
+
+        if (Pillar != null){
 			for (int row = 0; row < Rows+1; row++) {
 				for (int column = 0; column < Columns+1; column++) {
 					float x = column*(CellWidth+(AddGaps?.2f:0));

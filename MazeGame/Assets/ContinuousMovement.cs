@@ -7,6 +7,7 @@ public class ContinuousMovement : MonoBehaviour
     private Rigidbody rb;
 
     public AudioClip CoinSound = null;
+    public AudioClip KeySound = null;
 
     private Rigidbody mRigidBody = null;
     private AudioSource mAudioSource = null;
@@ -29,6 +30,14 @@ public class ContinuousMovement : MonoBehaviour
             if (mAudioSource != null && CoinSound != null)
             {
                 mAudioSource.PlayOneShot(CoinSound);
+            }
+            Destroy(other.gameObject);
+        }
+        if (other.gameObject.tag.Equals("Key"))
+        {
+            if (mAudioSource != null && KeySound != null)
+            {
+                mAudioSource.PlayOneShot(KeySound);
             }
             Destroy(other.gameObject);
         }
