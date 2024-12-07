@@ -44,7 +44,7 @@ public class MazeSpawner : MonoBehaviour {
     public GameObject ExitPortalPrefab = null; // The exit portal prefab
     private GameObject exitPortalInstance = null; // Instance of the exit portal
     private Vector3 exitPortalPosition; // The spawn position for the exit portal
-    private int keysCollected = 0; // Tracks the number of collected keys
+    public int keysCollected = 0; // Tracks the number of collected keys
 
 
 
