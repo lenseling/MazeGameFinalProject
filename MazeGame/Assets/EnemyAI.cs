@@ -22,6 +22,7 @@ public class EnemyAI : MonoBehaviour
     private float investigationStartTime;           // when the last investigation started
     private float wanderTimer;                      // timer for the current wandering behavior
     private State curState;
+    private HealthSystem hs;
 
     public void Init()
     {
@@ -34,6 +35,7 @@ public class EnemyAI : MonoBehaviour
         }
         curState = State.Initializing;
         startWandering();
+        hs = FindObjectsOfType<HealthSystem>()[0];
         Debug.Log("Enemy Initialized");
     }
 
@@ -46,7 +48,7 @@ public class EnemyAI : MonoBehaviour
             if (agent.remainingDistance <= agent.stoppingDistance)
             {
                 // player found
-                // TODO: Enemy behavior
+                hs.reduceLife();
             }
             else if(Time.time > investigationStartTime + maxInvestiagationTime)
             {
