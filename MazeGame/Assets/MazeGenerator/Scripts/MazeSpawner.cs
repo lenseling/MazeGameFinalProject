@@ -47,12 +47,9 @@ public class MazeSpawner : MonoBehaviour {
     public int keysCollected = 0; // Tracks the number of collected keys
 
 	public GameObject StatuePrefab; // Prefab for the statues
-	public GameObject AxePrefab; // Prefab for the swinging axes
-	public int NumberOfStatues = 3; // Number of statues to spawn
-	public int NumberOfAxes = 1; // Number of swinging axes to spawn
-
-
-
+	public GameObject spikePrefab; // Prefab for the swinging spikes
+	public int NumberOfspikes; // Number of swinging spikes to spawn
+    private List<Vector3> spikeSpawnPositions = new List<Vector3>();
 
     void Start() {
 
@@ -85,6 +82,7 @@ public class MazeSpawner : MonoBehaviour {
 
 				Vector3 cellCenter = new Vector3(x, 1, z); // Adjust y if necessary
 				keySpawnPositions.Add(cellCenter);
+				spikeSpawnPositions.Add(cellCenter);
 
 				MazeCell cell = mMazeGenerator.GetMazeCell(row,column);
 				GameObject tmp;
@@ -136,7 +134,7 @@ public class MazeSpawner : MonoBehaviour {
 				GameObject key = Instantiate(KeyPrefab, keySpawnPositions[i], Quaternion.identity, transform);
 
 				// Spawn the statue to cover the key
-				if (StatuePrefab != null && i < NumberOfStatues)
+				if (StatuePrefab != null && i < NumberOfKeys)
 				{
 					Vector3 statuePosition = keySpawnPositions[i];
 					statuePosition.y = Floor.transform.position.y + 1; // Adjust Y position so the statue doesn't overlap the key visually
@@ -150,7 +148,31 @@ public class MazeSpawner : MonoBehaviour {
 			}
 		}
 
+		if (spikePrefab != null && NumberOfspikes > 0)
+		{
+			for (int i = spikeSpawnPositions.Count - 1; i > 0; i--)
+			{
+				int randomIndex = Random.Range(0, i + 1);
+				Vector3 temp = spikeSpawnPositions[i];
+				spikeSpawnPositions[i] = spikeSpawnPositions[randomIndex];
+				spikeSpawnPositions[randomIndex] = temp;
+			}
+			for (int i = 0; i < Mathf.Min(NumberOfspikes, spikeSpawnPositions.Count); i++)
+			{
+                Vector3 spawnPosition = spikeSpawnPositions[i];
+                spawnPosition.y = Mathf.Max(spawnPosition.y - 1.5f, 0); // Lower the spike closer to the floor, clamping at 0 to avoid underground placement
 
+                // Instantiate the spike
+                GameObject spike = Instantiate(spikePrefab, spawnPosition, Quaternion.identity, transform);
+                // Instantiate the spike
+
+                // Scale adjustment (if not already set in the prefab)
+                spike.transform.localScale = new Vector3(1f, 1f, 1f); // Adjust scale as needed
+
+                
+            }
+		
+		}
         if (ExitPortalPrefab != null)
         {
             // Choose a random position for the portal from the key spawn positions
@@ -174,23 +196,6 @@ public class MazeSpawner : MonoBehaviour {
                 }
             }
 		}
-
-		if (AxePrefab != null && NumberOfAxes > 0)
-		{
-			for (int i = 0; i < NumberOfAxes; i++)
-			{
-				// Choose a random position for the axe
-				int randomIndex = Random.Range(0, keySpawnPositions.Count);
-				Vector3 axePosition = keySpawnPositions[randomIndex];
-
-				// Adjust the Y position and rotation to align with the maze walls
-				axePosition.y += 1; // Adjust Y position for the axe to swing properly
-				Quaternion axeRotation = Quaternion.Euler(0, Random.Range(0, 360), 0); // Randomize the rotation for variety
-
-				Instantiate(AxePrefab, axePosition, axeRotation, transform);
-			}
-		}
-
 
         if (navMeshSurface != null)
         {
