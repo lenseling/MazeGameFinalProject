@@ -27,7 +27,6 @@ public class EnemyAI : MonoBehaviour
     {
         // Automatically find and assign the NavMeshAgent component
         agent = GetComponent<NavMeshAgent>();
-        Debug.Log(agent);
         if (agent == null)
         {
             Debug.LogError("NavMeshAgent not found on the Enemy prefab!");
