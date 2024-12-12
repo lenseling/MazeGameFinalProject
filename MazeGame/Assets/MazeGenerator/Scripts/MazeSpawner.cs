@@ -46,6 +46,12 @@ public class MazeSpawner : MonoBehaviour {
     private Vector3 exitPortalPosition; // The spawn position for the exit portal
     public int keysCollected = 0; // Tracks the number of collected keys
 
+	public GameObject StatuePrefab; // Prefab for the statues
+	public GameObject AxePrefab; // Prefab for the swinging axes
+	public int NumberOfStatues = 3; // Number of statues to spawn
+	public int NumberOfAxes = 1; // Number of swinging axes to spawn
+
+
 
 
     void Start() {
@@ -114,22 +120,36 @@ public class MazeSpawner : MonoBehaviour {
 		}
 
         if (KeyPrefab != null && NumberOfKeys > 0)
-        {
-            // Shuffle the positions
-            for (int i = keySpawnPositions.Count - 1; i > 0; i--)
-            {
-                int randomIndex = Random.Range(0, i + 1);
-                Vector3 temp = keySpawnPositions[i];
-                keySpawnPositions[i] = keySpawnPositions[randomIndex];
-                keySpawnPositions[randomIndex] = temp;
-            }
+{
+			// Shuffle the positions
+			for (int i = keySpawnPositions.Count - 1; i > 0; i--)
+			{
+				int randomIndex = Random.Range(0, i + 1);
+				Vector3 temp = keySpawnPositions[i];
+				keySpawnPositions[i] = keySpawnPositions[randomIndex];
+				keySpawnPositions[randomIndex] = temp;
+			}
 
-            // Spawn keys at random positions
-            for (int i = 0; i < Mathf.Min(NumberOfKeys, keySpawnPositions.Count); i++)
-            {
-                Instantiate(KeyPrefab, keySpawnPositions[i], Quaternion.identity, transform);
-            }
-        }
+			// Spawn keys at random positions
+			for (int i = 0; i < Mathf.Min(NumberOfKeys, keySpawnPositions.Count); i++)
+			{
+				GameObject key = Instantiate(KeyPrefab, keySpawnPositions[i], Quaternion.identity, transform);
+
+				// Spawn the statue to cover the key
+				if (StatuePrefab != null && i < NumberOfStatues)
+				{
+					Vector3 statuePosition = keySpawnPositions[i];
+					statuePosition.y = Floor.transform.position.y + 1; // Adjust Y position so the statue doesn't overlap the key visually
+					GameObject statue = Instantiate(StatuePrefab, statuePosition, Quaternion.identity, transform);
+
+					// Attach the key to the statue
+					key.transform.parent = statue.transform;
+					key.transform.localPosition = Vector3.zero; // Center the key inside the statue
+					key.SetActive(false); // Hide the key until the statue is moved
+				}
+			}
+		}
+
 
         if (ExitPortalPrefab != null)
         {
@@ -154,6 +174,24 @@ public class MazeSpawner : MonoBehaviour {
                 }
             }
 		}
+
+		if (AxePrefab != null && NumberOfAxes > 0)
+		{
+			for (int i = 0; i < NumberOfAxes; i++)
+			{
+				// Choose a random position for the axe
+				int randomIndex = Random.Range(0, keySpawnPositions.Count);
+				Vector3 axePosition = keySpawnPositions[randomIndex];
+
+				// Adjust the Y position and rotation to align with the maze walls
+				axePosition.y += 1; // Adjust Y position for the axe to swing properly
+				Quaternion axeRotation = Quaternion.Euler(0, Random.Range(0, 360), 0); // Randomize the rotation for variety
+
+				Instantiate(AxePrefab, axePosition, axeRotation, transform);
+			}
+		}
+
+
         if (navMeshSurface != null)
         {
             navMeshSurface.BuildNavMesh();

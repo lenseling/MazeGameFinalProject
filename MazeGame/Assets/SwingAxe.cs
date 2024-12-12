@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class SwingAxe : MonoBehaviour
 {
-    public GameObject axe; // Reference to the axe GameObject
     public float swingSpeed = 50f; // Speed of the swing
     public float maxAngle = 45f;  // Maximum swing angle
 
@@ -31,16 +30,7 @@ public class SwingAxe : MonoBehaviour
             }
         }
 
-        // Rotate the axe around the swing point
-        RotateAxe();
-    }
-
-    private void RotateAxe()
-    {
-        if (axe != null)
-        {
-            // Rotate the axe around the SwingPoint's position
-            axe.transform.RotateAround(transform.position, Vector3.forward, swingingForward ? swingSpeed * Time.deltaTime : -swingSpeed * Time.deltaTime);
-        }
+        // Apply the rotation to the axe
+        transform.localRotation = Quaternion.Euler(currentAngle, 0f, 0f); // Adjust axis if needed
     }
 }
