@@ -133,18 +133,6 @@ public class MazeSpawner : MonoBehaviour {
 			{
 				GameObject key = Instantiate(KeyPrefab, keySpawnPositions[i], Quaternion.identity, transform);
 
-				// Spawn the statue to cover the key
-				if (StatuePrefab != null && i < NumberOfKeys)
-				{
-					Vector3 statuePosition = keySpawnPositions[i];
-					statuePosition.y = Floor.transform.position.y + 1; // Adjust Y position so the statue doesn't overlap the key visually
-					GameObject statue = Instantiate(StatuePrefab, statuePosition, Quaternion.identity, transform);
-
-					// Attach the key to the statue
-					key.transform.parent = statue.transform;
-					key.transform.localPosition = Vector3.zero; // Center the key inside the statue
-					key.SetActive(false); // Hide the key until the statue is moved
-				}
 			}
 		}
 
