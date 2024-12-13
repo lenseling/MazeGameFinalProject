@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class HealthSystem : MonoBehaviour
 {
@@ -50,6 +51,6 @@ public class HealthSystem : MonoBehaviour
     private void OnPlayerDeath()
     {
         Debug.Log("Player has no lives left. Game Over!");
-        
+        SceneManager.LoadScene("DeathScene");
     }
 }
