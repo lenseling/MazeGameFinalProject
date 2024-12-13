@@ -17,7 +17,9 @@ public class EnemyAI : MonoBehaviour
     public float maxInvestigationDistance = 10f;    // max distance to trigger investiagtion
     public float wanderRadius = 10f;                // radius within which the Enemy can wander
     public float wanderInterval = 5f;               // time interval between picking new random destinations
+    public float detectionRadius = 2.0f;            // Distance to consider the player "found"
 
+    private GameObject player;                       // Reference to the player's transform
     private NavMeshAgent agent;                      // reference to the Enemy pathfinding agent
     private float investigationStartTime;           // when the last investigation started
     private float wanderTimer;                      // timer for the current wandering behavior
@@ -35,19 +37,30 @@ public class EnemyAI : MonoBehaviour
         }
         curState = State.Initializing;
         startWandering();
+        player = GameObject.Find("Player");
+        if (player == null)
+        {
+            Debug.LogError("GameObject named 'Player' not found in the scene. Make sure it exists and is named correctly.");
+        }
+        else
+        {
+            Debug.Log("Player GameObject successfully assigned!");
+        }
         Debug.Log("Enemy Initialized");
     }
 
     // Update is called once per frame
     void Update()
     {
-        // check if the Enemy has reachedthe player
+        // check if the Enemy has reached the player
         if (curState == State.Investigating)
         {
-            if (agent.remainingDistance <= agent.stoppingDistance)
+            float distanceToPlayer = Vector3.Distance(agent.transform.position, player.transform.position);
+            if (distanceToPlayer <= detectionRadius)
             {
                 // player found
                 FindObjectsOfType<HealthSystem>()[0].reduceLife();
+                Debug.Log("Player found!");
             }
             else if(Time.time > investigationStartTime + maxInvestiagationTime)
             {

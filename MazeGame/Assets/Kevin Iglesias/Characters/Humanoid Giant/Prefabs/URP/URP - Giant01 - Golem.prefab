@@ -2160,7 +2160,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7627fb6e6a394d7488c584293ffa5a02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxInvestiagationTime: 5
-  maxInvestigationDistance: 10
-  wanderRadius: 10
+  maxInvestiagationTime: 8
+  maxInvestigationDistance: 30
+  wanderRadius: 20
   wanderInterval: 5
+  detectionRadius: 2
