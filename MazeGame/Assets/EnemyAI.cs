@@ -35,7 +35,6 @@ public class EnemyAI : MonoBehaviour
         }
         curState = State.Initializing;
         startWandering();
-        hs = FindObjectsOfType<HealthSystem>()[0];
         Debug.Log("Enemy Initialized");
     }
 
@@ -48,7 +47,7 @@ public class EnemyAI : MonoBehaviour
             if (agent.remainingDistance <= agent.stoppingDistance)
             {
                 // player found
-                hs.reduceLife();
+                FindObjectsOfType<HealthSystem>()[0].reduceLife();
             }
             else if(Time.time > investigationStartTime + maxInvestiagationTime)
             {
