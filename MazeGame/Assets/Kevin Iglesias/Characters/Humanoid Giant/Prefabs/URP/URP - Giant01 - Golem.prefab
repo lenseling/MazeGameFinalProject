@@ -2164,4 +2164,4 @@ MonoBehaviour:
   maxInvestigationDistance: 30
   wanderRadius: 20
   wanderInterval: 5
-  detectionRadius: 2
+  detectionRadius: 1

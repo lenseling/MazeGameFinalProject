@@ -18,6 +18,7 @@ public class EnemyAI : MonoBehaviour
     public float wanderRadius = 10f;                // radius within which the Enemy can wander
     public float wanderInterval = 5f;               // time interval between picking new random destinations
     public float detectionRadius = 2.0f;            // Distance to consider the player "found"
+    public float cooldown = 2.0f;                         // cooldown for reducing lives
 
     private GameObject player;                       // Reference to the player's transform
     private NavMeshAgent agent;                      // reference to the Enemy pathfinding agent
@@ -25,6 +26,7 @@ public class EnemyAI : MonoBehaviour
     private float wanderTimer;                      // timer for the current wandering behavior
     private State curState;
     private HealthSystem hs;
+    private float lastReduced;
 
     public void Init()
     {
@@ -53,17 +55,18 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         // check if the Enemy has reached the player
-        if (curState == State.Investigating)
+        float distanceToPlayer = Vector3.Distance(agent.transform.position, player.transform.position);
+        if (distanceToPlayer <= detectionRadius && Time.time - lastReduced >= cooldown)
         {
-            float distanceToPlayer = Vector3.Distance(agent.transform.position, player.transform.position);
-            if (distanceToPlayer <= detectionRadius)
-            {
-                // player found
-                FindObjectsOfType<HealthSystem>()[0].reduceLife();
-                Debug.Log("Player found!");
-            }
-            else if(Time.time > investigationStartTime + maxInvestiagationTime)
-            {
+            // player found
+            FindObjectsOfType<HealthSystem>()[0].reduceLife();
+            Debug.Log("Player found!");
+            lastReduced = Time.time;
+        }
+        if (curState == State.Investigating)
+        { 
+           if(Time.time > investigationStartTime + maxInvestiagationTime)
+           {
                 // check if the Enemy's investigation time exceeds
                 // if exceeds, then stops and starts wandering
                 Debug.Log("Enemy stops investiagtion");
